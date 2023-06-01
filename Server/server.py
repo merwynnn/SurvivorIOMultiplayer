@@ -50,7 +50,7 @@ class Server:
                         break
 
             elif message[0] == "Matchmaking":
-                if len(message>2):
+                if len(message)>2:
                     # Checking if the player is cheating
                     is_cheating = self.is_cheating(message[2:].join(","))
                     if not is_cheating:
