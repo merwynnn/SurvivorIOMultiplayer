@@ -52,7 +52,7 @@ class Server:
             elif message[0] == "Matchmaking":
                 if len(message)>2:
                     # Checking if the player is cheating
-                    is_cheating = self.is_cheating(message[2:].join(","))
+                    is_cheating = self.is_cheating(",".join(message[2:]))
                     if not is_cheating:
                         matchmaking_info = await self.matchmaking(message[1:], websocket)
                         await websocket.send("MatchmakingInfo" + "," + str(matchmaking_info[0].id) + "," + str(matchmaking_info[1].id))
