@@ -1,4 +1,5 @@
 import asyncio
+import http
 
 import websockets
 from session import Session
@@ -25,8 +26,12 @@ class Server:
         loop = asyncio.get_running_loop()
         stop = loop.create_future()
         print("Server running on port ", self.port)
-        async with websockets.serve(self.handler, "0.0.0.0", self.port):
+        async with websockets.serve(self.handler, "0.0.0.0", self.port, process_request=self.health_check):
             await asyncio.Future()  # run forever
+
+    async def health_check(self, path, request_headers):
+        if path == "/healthz":
+            return http.HTTPStatus.OK, [], b"OK\n"
 
     async def handler(self, websocket):
         async for m in websocket:

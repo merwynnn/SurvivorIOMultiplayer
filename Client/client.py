@@ -13,7 +13,7 @@ from player import Player
 
 class Client:
     #link = "ws://online-pong-websocket.herokuapp.com/0.0.0.0"
-    link = "ws://192.168.1.179:25565"
+    link = "wss://survivoriomultiplayer.onrender.com"
 
     def __init__(self):
         self.get_content()
