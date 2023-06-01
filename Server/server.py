@@ -29,6 +29,8 @@ class Server:
         async with websockets.serve(self.handler, "0.0.0.0", self.port, process_request=self.health_check):
             await asyncio.Future()  # run forever
 
+        await stop
+
     async def health_check(self, path, request_headers):
         if path == "/healthz":
             return http.HTTPStatus.OK, [], b"OK\n"
