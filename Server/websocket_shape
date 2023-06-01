@@ -1,0 +1,14 @@
+
+Matchmaking :
+received : "Matchmaking" + username
+sent: MatchmakingInfo" + session id + player id
+
+Game:
+received: "GameInfo" + session id + player id
+sent: "GameInfo" + game infos
+
+OnStart:
+sent: "StartInfo" + start info
+
+OnNewPlayerJoin:
+sent: "OnNewPlayerJoinInfo" + player id + player username
