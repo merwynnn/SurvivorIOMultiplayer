@@ -32,6 +32,7 @@ class Client:
         self.player = Player(self.win, username)
 
         self.players = []       # Exclude himself
+
         self.session_id = None
         self.websocket = None
 
@@ -64,21 +65,25 @@ class Client:
                     player.angle = int(infos[2])
 
             elif result[0] == "MatchmakingInfo":
-                print("Matchmaking successful")
+                print("Matchmaking... [" + result[1] + "/" + result[2] + "]")
+
+            elif result[0] == "MatchmakingInfo":
                 self.session_id = result[1]
                 self.player.id = result[2]
+                print("Matchmaking... [" + result[3] + "/" + result[4] + "]")
 
             elif result[0] == "OnNewPlayerJoin":
                 new_player = Player(self.win, result[2])
                 new_player.id = result[1]
                 self.players.append(new_player)
-                print(f"{new_player.username} joined the server !")
+                print(f"{new_player.username} joined the server ! [" + result[3] + "/" + result[4] + "]")
 
             elif result[0] == "StartInfo":
                 self.has_game_started = True
 
     def on_open(self):
         content = self.get_content()
+        print("Matchmaking...")
         self.websocket.send("Matchmaking," + self.player.username + "," + content)
 
     def start(self):
