@@ -65,9 +65,6 @@ class Client:
                     player.angle = int(infos[2])
 
             elif result[0] == "MatchmakingInfo":
-                print("Matchmaking... [" + result[1] + "/" + result[2] + "]")
-
-            elif result[0] == "MatchmakingInfo":
                 self.session_id = result[1]
                 self.player.id = result[2]
                 print("Matchmaking... [" + result[3] + "/" + result[4] + "]")
