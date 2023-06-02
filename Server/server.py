@@ -44,8 +44,8 @@ class Server:
                     if session.id == message[1]:
                         for i, player in enumerate(session.players):
                             if player.id == message[2]:
-                                msg = session.on_received_message_from_player(player)
-                                await player.websocket.send("GameInfo" + msg)
+                                msg = session.on_received_message_from_player(player, message[3::])
+                                await player.websocket.send("GameInfo," + msg)
                                 break
                         break
 
@@ -54,11 +54,10 @@ class Server:
                     # Checking if the player is cheating
                     is_cheating = self.is_cheating(",".join(message[2:]))
                     if not is_cheating:
-                        matchmaking_info = await self.matchmaking(message[1:], websocket)
+                        matchmaking_info = await self.matchmaking(message[1], websocket)
                         await websocket.send("MatchmakingInfo" + "," + str(matchmaking_info[0].id) + "," + str(matchmaking_info[1].id))
                         print(message[1], " joined the server !")
                         if matchmaking_info[0].full:            #If session is full, start the game
-                            time.sleep(2)
                             await matchmaking_info[0].start()
 
     async def matchmaking(self, username, websocket):

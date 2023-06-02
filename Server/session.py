@@ -1,5 +1,6 @@
 import random
 import string
+from pygame.math import Vector2 as Vec2
 
 
 class Session:
@@ -13,7 +14,8 @@ class Session:
     async def join(self, new_player):
         if len(self.players) < self.max_players:
             for player in self.players:
-                await player.websocket.send("OnNewPlayerJoin" + "," + str(new_player.id) + "," + str(new_player.username))
+                await player.websocket.send(
+                    "OnNewPlayerJoin" + "," + str(new_player.id) + "," + str(new_player.username))
                 await new_player.websocket.send(
                     "OnNewPlayerJoin" + "," + str(player.id) + "," + str(player.username))
             self.players.append(new_player)
@@ -24,9 +26,18 @@ class Session:
         else:
             return False
 
-    def on_received_message_from_player(self, player):
-        msg = ""
+    def on_received_message_from_player(self, player, message):
+        player.position = Vec2((int(message[0]), int(message[1])))
+        player.angle = int(message[2])
+        msg = self.get_game_info_for_player(player)
         return msg
+
+    def get_game_info_for_player(self, player):
+        infos = []
+        for p in self.players:
+            if p != player:
+                infos.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{p.angle}")
+        return ",".join(infos)
 
     async def start(self):
         for player in self.players:

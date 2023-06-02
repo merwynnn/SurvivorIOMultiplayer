@@ -4,8 +4,13 @@ import string
 import os
 import hashlib
 import base64
+import sys
 
+import numpy as np
 from websocket import create_connection
+
+import pygame
+from pygame.math import Vector2 as Vec2
 
 import _thread
 from player import Player
@@ -16,19 +21,24 @@ class Client:
     link = "wss://survivoriomultiplayer.onrender.com"
 
     def __init__(self):
-        self.get_content()
+
+        self.win = pygame.display.set_mode((0, 0))
+
         username = input("Type your username: ")
         if username == "":
             numbers = "0123456789"
             username = ''.join(random.sample(string.ascii_letters + numbers, 10))  # Generate a random link
 
-        self.player = Player(username)
+        self.player = Player(self.win, username)
 
-        self.players = []       # Exclude itself
+        self.players = []       # Exclude himself
         self.session_id = None
         self.websocket = None
 
         self.has_game_started = False
+
+        self.background_color = (250, 212, 117)
+
         self.play()
 
     def play(self):
@@ -45,16 +55,25 @@ class Client:
             message = self.websocket.recv()
             result = message.split(",")
             if result[0] == "GameInfo":
-                pass
+                for r in result[1::]:
+                    player_id, infos = r.split(":")
+                    infos = infos.split("/")
+                    pos = Vec2((int(infos[0]), int(infos[1])))
+                    player = self.players[player_id]
+                    player.position = pos
+                    player.angle = int(infos[2])
+
             elif result[0] == "MatchmakingInfo":
                 print("Matchmaking successful")
                 self.session_id = result[1]
                 self.player.id = result[2]
+
             elif result[0] == "OnNewPlayerJoin":
-                new_player = Player(result[2])
+                new_player = Player(self.win, result[2])
                 new_player.id = result[1]
                 self.players.append(new_player)
                 print(f"{new_player.username} joined the server !")
+
             elif result[0] == "StartInfo":
                 self.has_game_started = True
 
@@ -63,9 +82,35 @@ class Client:
         self.websocket.send("Matchmaking," + self.player.username + "," + content)
 
     def start(self):
-        print("start")
+        print("Game started")
+        screen_center = self.get_screen_center()
+
         while True:
-            self.websocket.send("GameInfo," + self.session_id )
+            # Main Loop
+            self.win.fill(self.background_color)
+            events = pygame.event.get()
+            mouse_pos = Vec2(pygame.mouse.get_pos())
+            for event in events:
+                if event.type == pygame.QUIT:
+                    sys.exit()
+
+            delta = screen_center - self.player.position  # Used to make the player always centered on the screen
+
+            self.player.frame(mouse_pos, events)
+            self.player.draw(delta=delta)
+
+            for player in self.players.values():
+                player.draw(delta=delta)
+
+            self.websocket.send("GameInfo," + self.session_id + "," + self.player.id + "," + self.get_player_info())
+
+            pygame.display.update()
+
+    def get_player_info(self):
+        return f"{int(self.player.position[0])},{int(self.player.position[1])},{int(self.player.angle)}"
+
+    def get_screen_center(self):
+        return np.array((self.win.get_width() / 2, self.win.get_height() / 2))
 
     def get_content(self):
         # Anti-cheat system. Reads all the files in the directory and send them to the server, so it can check if they have not been modified
