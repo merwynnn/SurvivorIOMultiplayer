@@ -55,7 +55,7 @@ class Server:
                     is_cheating = False # self.is_cheating(",".join(message[2:]))
                     if not is_cheating:
                         matchmaking_info = await self.matchmaking(message[1], websocket)
-                        await websocket.send("MatchmakingInfo" + "," + str(matchmaking_info[0].id) + "," + str(matchmaking_info[1].id) + "," + str(len(matchmaking_info[0].player)) + "," + str(matchmaking_info[0].max_players))
+                        await websocket.send("MatchmakingInfo" + "," + str(matchmaking_info[0].id) + "," + str(matchmaking_info[1].id) + "," + str(len(matchmaking_info[0].players)) + "," + str(matchmaking_info[0].max_players))
                         print(message[1], " joined the server !")
                         if matchmaking_info[0].full:            #If session is full, start the game
                             await matchmaking_info[0].start()

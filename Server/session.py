@@ -15,9 +15,9 @@ class Session:
         if len(self.players) < self.max_players:
             for player in self.players:
                 await player.websocket.send(
-                    "OnNewPlayerJoin" + "," + str(new_player.id) + "," + str(new_player.username))
+                    "OnNewPlayerJoin" + "," + str(new_player.id) + "," + str(new_player.username) + "," + str(len(self.players)) + "," + str(self.max_players))
                 await new_player.websocket.send(
-                    "OnNewPlayerJoin" + "," + str(player.id) + "," + str(player.username))
+                    "OnNewPlayerJoin" + "," + str(player.id) + "," + str(player.username) + "," + str(len(self.players)) + "," + str(self.max_players))
             self.players.append(new_player)
             if len(self.players) == self.max_players:
                 self.full = True
