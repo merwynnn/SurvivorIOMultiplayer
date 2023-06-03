@@ -71,7 +71,7 @@ class Client:
                     player.health = int(infos[2])
                     player.max_health = int(infos[3])
 
-                    abilities = infos[3].split("!")
+                    abilities = infos[4].split("!")
                     for ab in abilities:
                         ability_name, *ability_infos = ab.split("%")
                         ability = None
@@ -87,10 +87,7 @@ class Client:
                             self.player.abilities.append(abi)
                             ability = abi
 
-                        ability_infos = ability_infos.split("#")
                         ability.set_ability_info(ability_infos)
-
-
 
                 zombie_infos = result[2].split("|")
                 for zombie_info in zombie_infos:

@@ -64,3 +64,6 @@ class Player:
 
         # Draw the green foreground of the health bar
         pg.draw.rect(self.win, (0, 255, 0), (pos[0], pos[1], health_bar_width, health_bar_height))
+
+        for ability in self.abilities:
+            ability.draw(delta)

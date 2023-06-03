@@ -79,6 +79,10 @@ class Session:
             await self.check_if_active_task
             await self.game_loop_task
 
+        for player in self.players:
+            for ability in player.abilities:
+                await ability.stop_main_task()
+
     async def game_loop(self):
         while True:
             for player in self.players:

@@ -28,9 +28,10 @@ class KnivesAbility(Weapon):
             knife.draw(delta)
 
     def set_ability_info(self, info):
+        ability_infos = info.split("#")
         not_checked_knives = list(self.knives.values())
 
-        for knife_info in info:
+        for knife_info in ability_infos:
             knife_id = knife_info[0]
 
             knife = self.knives.get(knife_id)

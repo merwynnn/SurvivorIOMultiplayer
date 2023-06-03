@@ -14,7 +14,7 @@ class WeaponAbility:
     def get_ability_info(self):
         pass
 
-    def stop_main_task(self):
+    async def stop_main_task(self):
         if self.main_task:
             self.main_task.cancel()
             with suppress(asyncio.CancelledError):
@@ -30,6 +30,10 @@ class KnivesAbility(WeaponAbility):
 
         self.knives = []
 
+        self.shot_delay = 1
+
+        self.start_main_task(self.spawn_knife)
+
     def game_loop(self):
         knives = copy.copy(self.knives)
         for knife in knives:
@@ -43,12 +47,14 @@ class KnivesAbility(WeaponAbility):
         return f"KnivesAbility%{'%'.join(knives)}"
 
     async def spawn_knife(self):
-        player = self.player.session.get_nearest_player(self.player.position)
-        pos_delta = self.player.position.move_towards(player.position, 1)
-        dir = pos_delta-self.player.position
-        dir.normalize()
-        knife = Knife(self, self.player.position+dir*2, dir, 1)
-        self.knives.append(knife)
+        while True:
+            player = self.player.session.get_nearest_player(self.player.position)
+            pos_delta = self.player.position.move_towards(player.position, 1)
+            dir = pos_delta-self.player.position
+            dir.normalize()
+            knife = Knife(self, self.player.position+dir*2, dir, 1)
+            self.knives.append(knife)
+            await asyncio.sleep(self.shot_delay)
 
     def del_knife(self, knife):
         self.knives.remove(knife)
