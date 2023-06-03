@@ -22,7 +22,7 @@ class Client:
 
     def __init__(self):
 
-        self.win = pygame.display.set_mode((0, 0))
+        self.win = pygame.display.set_mode((600, 600))
 
         username = input("Type your username: ")
         if username == "":
@@ -31,7 +31,7 @@ class Client:
 
         self.player = Player(self.win, username)
 
-        self.players = []       # Exclude himself
+        self.players = {}      # Exclude himself
 
         self.session_id = None
         self.websocket = None
@@ -72,7 +72,7 @@ class Client:
             elif result[0] == "OnNewPlayerJoin":
                 new_player = Player(self.win, result[2])
                 new_player.id = result[1]
-                self.players.append(new_player)
+                self.players[new_player.id] = new_player
                 print(f"{new_player.username} joined the server ! [" + result[3] + "/" + result[4] + "]")
 
             elif result[0] == "StartInfo":
