@@ -71,7 +71,7 @@ class Session:
         self.check_if_active_task = asyncio.ensure_future(self.check_if_active())
         self.game_loop_task = asyncio.ensure_future(self.game_loop())
 
-    def stop_session(self):
+    async def stop_session(self):
         self.spawn_zombie_task.cancel()
         self.check_if_active_task.cancel()
         self.game_loop_task.cancel()
@@ -108,7 +108,7 @@ class Session:
                     break
 
             if not active:
-                self.stop_session()
+                await self.stop_session()
 
             await asyncio.sleep(5)
 
