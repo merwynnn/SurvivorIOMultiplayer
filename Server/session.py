@@ -52,8 +52,7 @@ class Session:
         infos = []
         players = []
         for p in self.players:
-            if p != player:
-                players.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}")
+            players.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{int(p.health)}/{int(p.max_health)}")
 
         infos.append("|".join(players))
 
@@ -86,7 +85,7 @@ class Session:
                 player = self.get_nearest_player(zombie.position)
                 zombie.move(player)
 
-            await asyncio.sleep(0.1)
+            await asyncio.sleep(0.01)
 
     async def spawn_zombies(self):
         while True:

@@ -14,3 +14,6 @@ class Player:
 
         self.position = Vec2((0, 0))
 
+        self.health = 1000
+        self.max_health = 1000
+

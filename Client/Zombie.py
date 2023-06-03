@@ -2,13 +2,15 @@ import pygame as pg
 
 
 class Zombie:
-    def __init__(self, win, id, pos):
+    def __init__(self, win, id, pos, health):
         self.class_name = "Zombie"
 
         self.win = win
         self.id = id
 
         self.position = pos
+
+        self.health = 50
 
     def draw(self, delta):
         pass

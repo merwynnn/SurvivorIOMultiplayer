@@ -63,9 +63,12 @@ class Client:
                 for player_info in player_infos:
                     player_id, infos = player_info.split(":")
                     infos = infos.split("/")
-                    pos = Vec2((int(infos[0]), int(infos[1])))
                     player = self.players[player_id]
-                    player.position = pos
+                    if player_id != self.player.id:
+                        pos = Vec2((int(infos[0]), int(infos[1])))
+                        player.position = pos
+                    player.health = int(infos[2])
+                    player.max_health = int(infos[3])
 
                 zombie_infos = result[2].split("|")
                 for zombie_info in zombie_infos:

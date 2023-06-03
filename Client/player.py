@@ -15,6 +15,10 @@ class Player:
         self.position = Vec2((0, 0))
         self.speed = 0.3
 
+        self.health = 1000
+        self.max_health = 1000
+
+
         self.sprite = None
         self.rect = None
 
@@ -35,6 +39,7 @@ class Player:
             move.scale_to_length(self.speed * dt)
             self.position += move
 
+
         # self.angle = -(math.atan2(mouse_pos[1]-self.win.get_height()/2,mouse_pos[0]-self.win.get_width()/2) * 180/math.pi + 90)
 
     def draw(self, delta):
@@ -43,3 +48,16 @@ class Player:
                                     (self.sprite.get_width() * self.scale, self.sprite.get_height() * self.scale))
         rect = sprite.get_rect(center=self.position + delta)
         self.win.blit(sprite, rect)
+
+        health_bar_length = 70
+        health_bar_height = 7
+
+        health_bar_width = int(self.health / self.max_health * health_bar_length)
+
+        pos = (rect.midtop[0]-health_bar_length//2, rect.midtop[1]-health_bar_height-10)
+
+        # Draw the red background of the health bar
+        pg.draw.rect(self.win, (0, 0, 0), (pos[0], pos[1], health_bar_length, health_bar_height))
+
+        # Draw the green foreground of the health bar
+        pg.draw.rect(self.win, (0, 255, 0), (pos[0], pos[1], health_bar_width, health_bar_height))
