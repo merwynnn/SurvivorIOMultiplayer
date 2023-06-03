@@ -18,6 +18,6 @@ class Zombie:
 
 class DefaultZombie(Zombie):
     def __init__(self, pos):
-        super().__init__(pos, 0.5, 5)
+        super().__init__(pos, 3, 5)
         self.class_name = "DefaultZombie"
 

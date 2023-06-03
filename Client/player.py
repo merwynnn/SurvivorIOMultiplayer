@@ -12,7 +12,7 @@ class Player:
         self.username = username
 
         self.position = Vec2((0, 0))
-        self.speed = 1.5
+        self.speed = 8
 
         self.sprite = None
         self.rect = None
