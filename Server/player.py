@@ -2,6 +2,7 @@ import random
 import string
 import numpy as np
 from pygame.math import Vector2 as Vec2
+from Abilities.WeaponsAbilities import KnivesAbility
 
 class Player:
     def __init__(self, username, websocket):
@@ -16,4 +17,6 @@ class Player:
 
         self.health = 1000
         self.max_health = 1000
+
+        self.abilities = [KnivesAbility(self)]
 

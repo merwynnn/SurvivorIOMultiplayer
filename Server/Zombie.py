@@ -32,7 +32,7 @@ class Zombie:
 
 class DefaultZombie(Zombie):
     def __init__(self, pos):
-        super().__init__(pos, speed=3, strength=5, health=50)
+        super().__init__(pos, speed=0.3, strength=5, health=50)
         self.class_name = "DefaultZombie"
 
         self.size = (960, 960)

@@ -14,7 +14,8 @@ from pygame.math import Vector2 as Vec2
 
 import _thread
 
-from Client.Zombie import DefaultZombie
+from Abilities.WeaponsAbilities import KnivesAbility
+from Zombie import DefaultZombie
 from player import Player
 
 
@@ -69,6 +70,27 @@ class Client:
                         player.position = pos
                     player.health = int(infos[2])
                     player.max_health = int(infos[3])
+
+                    abilities = infos[3].split("!")
+                    for ab in abilities:
+                        ability_name, *ability_infos = ab.split("%")
+                        ability = None
+                        for p_ab in self.player.abilities:
+                            if ab.ability_name == ability_name:
+                                ability = p_ab
+                                break
+
+                        if not ability:
+                            abi = None
+                            if ability_name == "KnivesAbility":
+                                abi = KnivesAbility(self.win)
+                            self.player.abilities.append(abi)
+                            ability = abi
+
+                        ability_infos = ability_infos.split("#")
+                        ability.set_ability_info(ability_infos)
+
+
 
                 zombie_infos = result[2].split("|")
                 for zombie_info in zombie_infos:

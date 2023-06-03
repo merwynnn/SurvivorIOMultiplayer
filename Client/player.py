@@ -4,6 +4,8 @@ import pygame as pg
 from pygame.math import Vector2 as Vec2
 import numpy as np
 
+from Abilities.WeaponsAbilities import KnivesAbility
+
 
 class Player:
     def __init__(self, username):
@@ -18,11 +20,12 @@ class Player:
         self.health = 1000
         self.max_health = 1000
 
-
         self.sprite = None
         self.rect = None
 
         self.scale = 0.1
+
+        self.abilities = [KnivesAbility(self)]
 
     def on_start(self):
         self.sprite = pg.image.load("Assets/player-sprite.png").convert_alpha()

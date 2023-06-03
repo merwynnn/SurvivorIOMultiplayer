@@ -8,7 +8,6 @@ from pygame.math import Vector2 as Vec2
 
 from Zombie import DefaultZombie
 
-
 class Session:
     def __init__(self):
         numbers = "0123456789"
@@ -22,11 +21,9 @@ class Session:
         self.zombie_level = 1
         self.spawn_radius = 300
 
-
         self.spawn_zombie_task = None
         self.check_if_active_task = None
         self.game_loop_task = None
-
 
     async def join(self, new_player):
         if len(self.players) < self.max_players:
@@ -52,7 +49,10 @@ class Session:
         infos = []
         players = []
         for p in self.players:
-            players.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{int(p.health)}/{int(p.max_health)}")
+            abilities = []
+            for ability in p.abilities:
+                abilities.append(ability.get_ability_info())
+            players.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{int(p.health)}/{int(p.max_health)}/{'!'.join(abilities)}")
 
         infos.append("|".join(players))
 
@@ -81,6 +81,10 @@ class Session:
 
     async def game_loop(self):
         while True:
+            for player in self.players:
+                for ability in player.abilities:
+                    ability.game_loop()
+
             for zombie in self.zombies.values():
                 player = self.get_nearest_player(zombie.position)
                 zombie.move(player)
