@@ -13,6 +13,8 @@ import pygame
 from pygame.math import Vector2 as Vec2
 
 import _thread
+
+from Client.Zombie import DefaultZombie
 from player import Player
 
 
@@ -31,6 +33,8 @@ class Client:
         self.player = Player(username)
 
         self.players = {}      # Exclude himself
+
+        self.zombies = {}
 
         self.session_id = None
         self.websocket = None
@@ -55,12 +59,26 @@ class Client:
             message = self.websocket.recv()
             result = message.split(",")
             if result[0] == "GameInfo":
-                for r in result[1::]:
-                    player_id, infos = r.split(":")
+                player_infos = result[1].split("|")
+                for player_info in player_infos:
+                    player_id, infos = player_info.split(":")
                     infos = infos.split("/")
                     pos = Vec2((int(infos[0]), int(infos[1])))
                     player = self.players[player_id]
                     player.position = pos
+
+                zombie_infos = result[2].split("|")
+                for zombie_info in zombie_infos:
+                    zombie_id, infos = zombie_info.split(":")
+                    infos = infos.split("/")
+                    zombie = self.zombies.get(zombie_id)
+                    if not zombie:
+                        if infos[0] == "DefaultZombie":
+                            zombie = DefaultZombie(self.win, zombie_id, None)
+                            self.zombies[zombie_id] = zombie
+
+                    pos = Vec2((int(infos[1]), int(infos[2])))
+                    zombie.position = pos
 
             elif result[0] == "MatchmakingInfo":
                 self.session_id = result[1]
