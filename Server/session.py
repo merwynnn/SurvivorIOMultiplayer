@@ -6,7 +6,7 @@ from contextlib import suppress
 
 from pygame.math import Vector2 as Vec2
 
-from Server.Zombie import DefaultZombie
+from Zombie import DefaultZombie
 
 
 class Session:
