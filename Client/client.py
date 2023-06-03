@@ -67,6 +67,7 @@ class Client:
                     player = self.players[player_id]
                     player.position = pos
 
+                print(result)
                 zombie_infos = result[2].split("|")
                 for zombie_info in zombie_infos:
                     zombie_id, infos = zombie_info.split(":")
@@ -129,6 +130,9 @@ class Client:
 
             for player in self.players.values():
                 player.draw(delta=delta)
+
+            for zombie in self.zombies.values():
+                zombie.draw(delta=delta)
 
             self.websocket.send("GameInfo," + self.session_id + "," + self.player.id + "," + self.get_player_info())
 
