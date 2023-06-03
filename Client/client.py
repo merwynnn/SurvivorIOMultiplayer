@@ -112,9 +112,12 @@ class Client:
 
         screen_center = self.get_screen_center()
 
+        clock = pygame.time.Clock()
 
         while True:
             # Main Loop
+            dt = clock.tick()
+
             self.win.fill(self.background_color)
             events = pygame.event.get()
             mouse_pos = Vec2(pygame.mouse.get_pos())
@@ -124,7 +127,7 @@ class Client:
 
             delta = screen_center - self.player.position  # Used to make the player always centered on the screen
 
-            self.player.frame(mouse_pos, events)
+            self.player.frame(mouse_pos, events, dt)
             self.player.draw(delta=delta)
 
             for player in self.players.values():
