@@ -21,15 +21,14 @@ class Client:
     link = "wss://survivoriomultiplayer.onrender.com"
 
     def __init__(self):
-
-        self.win = pygame.display.set_mode((600, 600))
+        self.win = None
 
         username = input("Type your username: ")
         if username == "":
             numbers = "0123456789"
             username = ''.join(random.sample(string.ascii_letters + numbers, 10))  # Generate a random link
 
-        self.player = Player(self.win, username)
+        self.player = Player(username)
 
         self.players = {}      # Exclude himself
 
@@ -70,7 +69,7 @@ class Client:
                 print("Matchmaking... [" + result[3] + "/" + result[4] + "]")
 
             elif result[0] == "OnNewPlayerJoin":
-                new_player = Player(self.win, result[2])
+                new_player = Player(result[2])
                 new_player.id = result[1]
                 self.players[new_player.id] = new_player
                 print(f"{new_player.username} joined the server ! [" + result[3] + "/" + result[4] + "]")
@@ -85,7 +84,17 @@ class Client:
 
     def start(self):
         print("Game started")
+
+        self.win = pygame.display.set_mode((600, 600))
+        self.player.win = self.win
+        self.player.on_start()
+
+        for player in self.players.values():
+            player.win = self.win
+            player.on_start()
+
         screen_center = self.get_screen_center()
+
 
         while True:
             # Main Loop
@@ -109,7 +118,7 @@ class Client:
             pygame.display.update()
 
     def get_player_info(self):
-        return f"{int(self.player.position[0])},{int(self.player.position[1])},{int(self.player.angle)}"
+        return f"{int(self.player.position[0])},{int(self.player.position[1])}"
 
     def get_screen_center(self):
         return np.array((self.win.get_width() / 2, self.win.get_height() / 2))

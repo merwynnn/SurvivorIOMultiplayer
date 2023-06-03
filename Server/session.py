@@ -28,7 +28,6 @@ class Session:
 
     def on_received_message_from_player(self, player, message):
         player.position = Vec2((int(message[0]), int(message[1])))
-        player.angle = int(message[2])
         msg = self.get_game_info_for_player(player)
         return msg
 
@@ -36,7 +35,7 @@ class Session:
         infos = []
         for p in self.players:
             if p != player:
-                infos.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{p.angle}")
+                infos.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}")
         return ",".join(infos)
 
     async def start(self):

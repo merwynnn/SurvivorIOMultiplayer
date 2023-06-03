@@ -13,5 +13,4 @@ class Player:
         self.websocket = websocket
 
         self.position = Vec2((0, 0))
-        self.angle = 0
 
