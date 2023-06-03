@@ -58,7 +58,7 @@ class Session:
         infos.append("|".join(players))
 
         zombies = []
-        for zombie in self.zombies:
+        for zombie in self.zombies.values():
             zombies.append(f"{zombie.id}:{zombie.class_name}/{int(zombie.position[0])}/{int(zombie.position[1])}")
         infos.append("|".join(zombies))
 
