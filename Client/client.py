@@ -82,6 +82,7 @@ class Client:
 
                     pos = Vec2((int(infos[1]), int(infos[2])))
                     zombie.position = pos
+                    zombie.scale = int(infos[3])
 
             elif result[0] == "MatchmakingInfo":
                 self.session_id = result[1]

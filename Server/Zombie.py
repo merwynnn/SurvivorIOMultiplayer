@@ -1,9 +1,10 @@
 import string
 import random
+import pygame
 
 
 class Zombie:
-    def __init__(self, pos, speed, strength):
+    def __init__(self, pos, speed, strength, health):
         self.class_name = "Zombie"
 
         numbers = "0123456789"
@@ -13,11 +14,26 @@ class Zombie:
         self.speed = speed
         self.strength = strength
 
+        self.health = health
+
+        self.size = (960, 960)
+        self.scale = 0.1
+
     def move(self, player):
         self.position.move_towards_ip(player.position, self.speed)
 
+    def collide_with_rect(self, rect):
+        rect1 = pygame.Rect(self.position, (self.size[0]*self.scale, self.size[1]*self.scale))
+
+        if rect1.colliderect(rect):
+            return True
+        return False
+
+
 class DefaultZombie(Zombie):
     def __init__(self, pos):
-        super().__init__(pos, 3, 5)
+        super().__init__(pos, speed=3, strength=5, health=50)
         self.class_name = "DefaultZombie"
+
+        self.size = (960, 960)
 
