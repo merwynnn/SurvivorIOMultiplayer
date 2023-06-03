@@ -1,6 +1,6 @@
 import asyncio
 from contextlib import suppress
-from Server.Abilities.Weapons import *
+from Weapons import *
 
 class WeaponAbility:
     def __init__(self, player):

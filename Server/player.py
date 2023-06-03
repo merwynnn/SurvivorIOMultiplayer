@@ -1,8 +1,7 @@
 import random
 import string
-import numpy as np
 from pygame.math import Vector2 as Vec2
-from Abilities.WeaponsAbilities import KnivesAbility
+from Server.WeaponsAbilities import KnivesAbility
 
 class Player:
     def __init__(self, username, websocket):
