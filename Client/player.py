@@ -12,12 +12,12 @@ class Player:
         self.username = username
 
         self.position = Vec2((0, 0))
-        self.speed = 1
+        self.speed = 1.5
 
         self.sprite = None
         self.rect = None
 
-        self.scale = 0.5
+        self.scale = 0.1
 
     def on_start(self):
         self.sprite = pg.image.load("Assets/player-sprite.png").convert_alpha()
@@ -37,5 +37,6 @@ class Player:
 
     def draw(self, delta):
         #img = pg.transform.rotozoom(self.sprite, self.angle, self.scale)
-        #self.rect = img.get_rect(center = self.position+delta)
-        self.win.blit(pg.transform.scale(self.sprite, (self.sprite.get_width()*self.scale, self.sprite.get_height()*self.scale)), self.position+delta)
+        sprite = pg.transform.scale(self.sprite, (self.sprite.get_width()*self.scale, self.sprite.get_height()*self.scale))
+        rect = sprite.get_rect(center = self.position+delta)
+        self.win.blit(sprite, rect)

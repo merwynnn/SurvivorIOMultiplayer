@@ -65,13 +65,13 @@ class Server:
             session = Session()
             self.sessions.append(session)
             new_player = Player(username, websocket)
-            await session.join(new_player)
-            new_player.session = session
         else:                                               #Join open session
             new_player = Player(username, websocket)
             session = self.sessions[-1]
-            await session.join(new_player)
-            new_player.session = session
+
+        await session.join(new_player)
+        new_player.session = session
+
         return (session, new_player)
 
     def is_cheating(self, message):

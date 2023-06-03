@@ -61,7 +61,6 @@ class Client:
                     pos = Vec2((int(infos[0]), int(infos[1])))
                     player = self.players[player_id]
                     player.position = pos
-                    player.angle = int(infos[2])
 
             elif result[0] == "MatchmakingInfo":
                 self.session_id = result[1]
