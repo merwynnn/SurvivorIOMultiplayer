@@ -41,7 +41,7 @@ class RemoteServer:
 
             if message[0] == "ToHost":
                 session = self.sessions[message[1]]
-                message.insert(session.websockets[websocket], 3)
+                message.insert(3, session.websockets[websocket])
                 await session.host.send(",".join(message[2::]))
 
             elif message[0] == "ToClient":
