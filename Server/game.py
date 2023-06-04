@@ -8,10 +8,12 @@ from pygame.math import Vector2 as Vec2
 
 from Zombie import DefaultZombie
 
-class Session:
-    def __init__(self):
-        numbers = "0123456789"
-        self.id = ''.join(random.sample(string.ascii_letters + numbers, 10))  # Generate a random link
+
+class Game:
+    def __init__(self, server):
+
+        self.server = server
+
         self.players = []
 
         self.max_players = 2
@@ -25,13 +27,13 @@ class Session:
         self.check_if_active_task = None
         self.game_loop_task = None
 
-    async def join(self, new_player):
+    def join(self, new_player):
         if len(self.players) < self.max_players:
             for player in self.players:
-                await player.websocket.send(
-                    "OnNewPlayerJoin" + "," + str(new_player.id) + "," + str(new_player.username) + "," + str(len(self.players)+1) + "," + str(self.max_players))
-                await new_player.websocket.send(
-                    "OnNewPlayerJoin" + "," + str(player.id) + "," + str(player.username) + "," + str(len(self.players)+1) + "," + str(self.max_players))
+                self.server.send_to_client(player.client_id, f"OnNewPlayerJoin,{str(new_player.id)},{str(new_player.username)},{str(len(self.players) + 1)},{str(self.max_players)}")
+                self.server.send_to_client(player.client_id,
+                                           f"OnNewPlayerJoin,{str(player.id)},{str(player.username)},{str(len(self.players) + 1)},{str(self.max_players)}")
+
             self.players.append(new_player)
             if len(self.players) == self.max_players:
                 self.full = True
@@ -52,23 +54,25 @@ class Session:
             abilities = []
             for ability in p.abilities:
                 abilities.append(ability.get_ability_info())
-            players.append(f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{int(p.health)}/{int(p.max_health)}/{'!'.join(abilities)}")
+            players.append(
+                f"{p.id}:{int(p.position[0])}/{int(p.position[1])}/{int(p.health)}/{int(p.max_health)}/{'!'.join(abilities)}")
 
         infos.append("|".join(players))
 
         zombies = []
         for zombie in self.zombies.values():
-            zombies.append(f"{zombie.id}:{zombie.class_name}/{int(zombie.position[0])}/{int(zombie.position[1])}/{int(zombie.scale)}")
+            zombies.append(
+                f"{zombie.id}:{zombie.class_name}/{int(zombie.position[0])}/{int(zombie.position[1])}/{int(zombie.scale)}")
         infos.append("|".join(zombies))
 
         return ",".join(infos)
 
-    async def start(self):
+    def start(self):
         for player in self.players:
-            await player.websocket.send("StartInfo")
+            self.server.send_to_client(player.client_id, "StartInfo")
         self.spawn_zombie_task = asyncio.ensure_future(self.spawn_zombies())
         self.check_if_active_task = asyncio.ensure_future(self.check_if_active())
-        #self.game_loop_task = asyncio.ensure_future(self.game_loop())
+        self.game_loop_task = asyncio.ensure_future(self.game_loop())
 
     async def stop_session(self):
         self.spawn_zombie_task.cancel()
@@ -99,9 +103,11 @@ class Session:
         while True:
             for player in self.players:
                 nb_zombie = 5
-                spawn_points = [Vec2(math.cos(2*math.pi/nb_zombie*x)*self.spawn_radius, math.sin(2*math.pi/nb_zombie*x)*self.spawn_radius) for x in range(0,nb_zombie+1)]
+                spawn_points = [Vec2(math.cos(2 * math.pi / nb_zombie * x) * self.spawn_radius,
+                                     math.sin(2 * math.pi / nb_zombie * x) * self.spawn_radius) for x in
+                                range(0, nb_zombie + 1)]
                 for spawn_point in spawn_points:
-                    zombie = DefaultZombie(spawn_point+player.position)
+                    zombie = DefaultZombie(spawn_point + player.position)
                     self.zombies[zombie.id] = zombie
 
             await asyncio.sleep(3)
@@ -111,7 +117,7 @@ class Session:
             active = False
             for player in self.players:
                 if player.websocket.open:
-                    active=True
+                    active = True
                     break
 
             if not active:

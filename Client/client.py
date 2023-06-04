@@ -28,6 +28,8 @@ class Client:
         if username == "":
             numbers = "0123456789"
             username = ''.join(random.sample(string.ascii_letters + numbers, 10))  # Generate a random link
+            
+        self.code = input("Code: ")
 
         self.player = Player(username)
 
@@ -35,7 +37,6 @@ class Client:
 
         self.zombies = {}
 
-        self.session_id = None
         self.websocket = None
 
         self.has_game_started = False
@@ -57,7 +58,7 @@ class Client:
         while True:
             message = self.websocket.recv()
             result = message.split(",")
-            if result[0] == "GameInfo":
+            if result[0] == "CurrentGameInfo":
                 player_infos = result[1].split("|")
                 for player_info in player_infos:
                     player_id, infos = player_info.split(":")
@@ -101,10 +102,9 @@ class Client:
                     zombie.position = pos
                     zombie.scale = int(infos[3])
 
-            elif result[0] == "MatchmakingInfo":
-                self.session_id = result[1]
-                self.player.id = result[2]
-                print("Matchmaking... [" + result[3] + "/" + result[4] + "]")
+            elif result[0] == "GameInfo":
+                self.player.id = result[1]
+                print("Waiting For Players... [" + result[2] + "/" + result[3] + "]")
 
             elif result[0] == "OnNewPlayerJoin":
                 new_player = Player(result[2])
@@ -117,8 +117,8 @@ class Client:
 
     def on_open(self):
         content = self.get_content()
-        print("Matchmaking...")
-        self.websocket.send("Matchmaking," + self.player.username + "," + content)
+        print("Connecting...")
+        self.websocket.send(f"ConnectToHost,{self.code},{self.player.username},{content}") 
 
     def start(self):
         print("Game started")
@@ -158,7 +158,7 @@ class Client:
             for zombie in zombies:
                 zombie.draw(delta=delta)
 
-            self.websocket.send("GameInfo," + self.session_id + "," + self.player.id + "," + self.get_player_info())
+            self.send_to_server(f"CurrentGameInfo,{self.player.id},{self.get_player_info()}")
 
             pygame.display.update()
 
@@ -186,6 +186,8 @@ class Client:
                 e.append(f+base64.b64decode(r2.encode('utf-8')).decode('utf-8')+fi.read())
         return r1.join(e)
 
+    def send_to_server(self, message):
+        self.websocket.send(f"ToHost,{self.code},{message}")
 
 
 client = Client()
