@@ -1,8 +1,6 @@
-import binascii
 import random
 import string
 import os
-import hashlib
 import base64
 import sys
 
@@ -14,7 +12,7 @@ from pygame.math import Vector2 as Vec2
 
 import _thread
 
-from Abilities.WeaponsAbilities import KnivesAbility
+from Client.WeaponsAbilities import KnivesAbility
 from Zombie import DefaultZombie
 from player import Player
 
@@ -64,7 +62,7 @@ class Client:
                 for player_info in player_infos:
                     player_id, infos = player_info.split(":")
                     infos = infos.split("/")
-                    player = self.players[player_id]
+                    player = self.player if player_id == self.player.id else self.players[player_id]
                     if player_id != self.player.id:
                         pos = Vec2((int(infos[0]), int(infos[1])))
                         player.position = pos
@@ -76,7 +74,7 @@ class Client:
                         ability_name, *ability_infos = ab.split("%")
                         ability = None
                         for p_ab in self.player.abilities:
-                            if ab.ability_name == ability_name:
+                            if p_ab.ability_name == ability_name:
                                 ability = p_ab
                                 break
 

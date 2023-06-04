@@ -68,7 +68,7 @@ class Session:
             await player.websocket.send("StartInfo")
         self.spawn_zombie_task = asyncio.ensure_future(self.spawn_zombies())
         self.check_if_active_task = asyncio.ensure_future(self.check_if_active())
-        self.game_loop_task = asyncio.ensure_future(self.game_loop())
+        #self.game_loop_task = asyncio.ensure_future(self.game_loop())
 
     async def stop_session(self):
         self.spawn_zombie_task.cancel()
