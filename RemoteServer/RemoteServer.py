@@ -46,7 +46,7 @@ class RemoteServer:
 
             elif message[0] == "ToClient":
                 session = self.sessions[message[1]]
-                client_websocket = session.clients[message[2]]
+                client_websocket = session.clients_id[message[2]]
                 await client_websocket.send(",".join(message[3::]))
 
             elif message[0] == "Host":
@@ -58,7 +58,7 @@ class RemoteServer:
                 session = self.sessions.get(message[1])
                 if session:
                     id = self.get_id()
-                    session.clients[id] = websocket
+                    session.clients_id[id] = websocket
                     session.websockets[websocket] = id
                     await session.host.send(f"OnConnect,{id},{','.join(message[2::])}")
 

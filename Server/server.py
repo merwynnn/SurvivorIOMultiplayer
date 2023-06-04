@@ -26,7 +26,8 @@ class Server:
 
         self.websocket = create_connection(self.link)
         self.on_open()
-        _thread.start_new_thread(self.on_message, ())
+        self.on_message()
+        #_thread.start_new_thread(self.on_message, ())
 
     def on_message(self):
         while True:
