@@ -66,3 +66,5 @@ class RemoteServer:
     def get_id(self):
         numbers = "0123456789"
         return ''.join(random.sample(string.ascii_letters + numbers, 10))  # Generate a random link
+
+remoteServer = RemoteServer()
