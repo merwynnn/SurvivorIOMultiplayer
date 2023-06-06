@@ -108,7 +108,7 @@ class Client:
 
                         pos = Vec2((int(infos[1]), int(infos[2])))
                         zombie.position = pos
-                        zombie.scale = int(infos[3])
+                        zombie.scale = float(infos[3])
 
             elif result[0] == "GameInfo":
                 self.player.id = result[1]
@@ -165,6 +165,7 @@ class Client:
             zombies = list(self.zombies.values())
             for zombie in zombies:
                 zombie.draw(delta=delta)
+
 
             self.send_to_server(f"CurrentGameInfo,{self.player.id},{self.get_player_info()}")
 

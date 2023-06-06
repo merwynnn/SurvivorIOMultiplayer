@@ -60,7 +60,7 @@ class Game:
         zombies = []
         for zombie in self.zombies.values():
             zombies.append(
-                f"{zombie.id}:{zombie.class_name}/{int(zombie.position[0])}/{int(zombie.position[1])}/{int(zombie.scale)}")
+                f"{zombie.id}:{zombie.class_name}/{int(zombie.position[0])}/{int(zombie.position[1])}/{float(zombie.scale)}")
         infos.append("|".join(zombies))
 
         return ",".join(infos)
@@ -106,7 +106,6 @@ class Game:
 
     def spawn_zombies(self):
         while True:
-            print("Zombie")
             for player in self.players:
                 nb_zombie = 5
                 spawn_points = [Vec2(math.cos(2 * math.pi / nb_zombie * x) * self.spawn_radius,
@@ -122,7 +121,7 @@ class Game:
         while True:
             active = False
             for player in self.players:
-                if player.websocket.open:
+                if False:
                     active = True
                     break
 
