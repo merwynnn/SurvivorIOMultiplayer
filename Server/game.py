@@ -12,13 +12,13 @@ from Zombie import DefaultZombie
 
 
 class Game:
-    def __init__(self, server):
+    def __init__(self, server, max_player=max_player):
 
         self.server = server
 
         self.players = []
 
-        self.max_players = 2
+        self.max_players = max_player
         self.full = False
 
         self.zombies = {}

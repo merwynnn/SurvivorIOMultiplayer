@@ -18,8 +18,10 @@ class Server:
         self.websocket = None
         
         self.code = None
+
+        max_player = input("Maximum number of player : ")
         
-        self.game = Game(self)
+        self.game = Game(self, max_player=max_player)
         
         self.main()
 
