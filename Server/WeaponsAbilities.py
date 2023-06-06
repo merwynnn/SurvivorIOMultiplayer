@@ -1,12 +1,16 @@
+import _thread
 import asyncio
+import time
 from contextlib import suppress
 from Weapons import *
+
 
 class WeaponAbility:
     def __init__(self, player):
         self.player = player
 
-        self.main_task = None
+        self.main_task_func = None
+        self._stop_main_task = False
 
     def game_loop(self):
         pass
@@ -14,14 +18,17 @@ class WeaponAbility:
     def get_ability_info(self):
         pass
 
-    async def stop_main_task(self):
-        if self.main_task:
-            self.main_task.cancel()
-            with suppress(asyncio.CancelledError):
-                await self.main_task
+    def stop_main_task(self):
+        self._stop_main_task = True
 
     def start_main_task(self, func):
-        self.main_task = asyncio.ensure_future(func())
+        self.main_task_func = func
+        self._stop_main_task = False
+        _thread.start_new_thread(self.loop, ())
+
+    def loop(self):
+        while not self._stop_main_task:
+            self.main_task_func()
 
 
 class KnivesAbility(WeaponAbility):
@@ -46,17 +53,20 @@ class KnivesAbility(WeaponAbility):
 
         return f"KnivesAbility%{'%'.join(knives)}"
 
-    async def spawn_knife(self):
-        while True:
-            player = self.player.session.get_nearest_player(self.player.position)
-            pos_delta = self.player.position.move_towards(player.position, 1)
-            dir = pos_delta-self.player.position
-            dir.normalize()
-            knife = Knife(self, self.player.position+dir*2, dir, 1)
-            self.knives.append(knife)
-            await asyncio.sleep(self.shot_delay)
+    def spawn_knife(self):
+        zombie = self.player.game.get_nearest_zombie(self.player.position)
+        print("loop", zombie)
+        if zombie:
+            pos_delta = self.player.position.move_towards(zombie.position, 1)
+            dir = pos_delta - self.player.position
+            if dir.length() > 0:
+
+                dir.normalize()
+                knife = Knife(self, self.player.position + dir * 2, dir, 1)
+                self.knives.append(knife)
+                print("Spawn Knife")
+        time.sleep(self.shot_delay)
 
     def del_knife(self, knife):
         self.knives.remove(knife)
         del knife
-

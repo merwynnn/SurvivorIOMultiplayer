@@ -1,0 +1,15 @@
+ToHost
+ToHost,session_id, [message]
+--> nom_message,  client_id, [message_end]
+
+ToClient
+ToClient, session_id, client_id, [message]
+--> [message]
+
+Host
+Host
+--> SessionInfo, session_id(code)
+
+ConnectToHost
+ConnectToHost,session_id,[message]
+-->OnConnect,client_id,[message]

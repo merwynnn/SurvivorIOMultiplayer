@@ -37,11 +37,11 @@ class KnivesAbility(Weapon):
 
                 knife = self.knives.get(knife_id)
 
-                pos = Vec2((int(knife_info[1]), int(knife_info[2])))
-                dir = Vec2((int(knife_info[3]), int(knife_info[4])))
+                pos = Vec2((float(knife_info[1]), float(knife_info[2])))
+                dir = Vec2((float(knife_info[3]), float(knife_info[4])))
 
                 if not knife:
-                    knife = Knife(self.win, pos, dir)
+                    knife = Knife(self.win, knife_id, pos, dir)
                     self.knives[knife_id] = knife
                 else:
                     not_checked_knives.remove(knife)
