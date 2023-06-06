@@ -3,8 +3,10 @@ import math
 import pygame as pg
 
 class Knife:
-    def __init__(self, win, pos, dir):
+    def __init__(self, win, id, pos, dir):
         self.win = win
+
+        self.id = id
         self.position = pos
         self.dir = dir
 

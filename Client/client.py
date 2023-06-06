@@ -79,6 +79,7 @@ class Client:
 
                     abilities = infos[4].split("!")
                     for ab in abilities:
+                        print(ab)
                         ability_name, *ability_infos = ab.split("%")
                         ability = None
                         for p_ab in self.player.abilities:
@@ -165,7 +166,6 @@ class Client:
             zombies = list(self.zombies.values())
             for zombie in zombies:
                 zombie.draw(delta=delta)
-
 
             self.send_to_server(f"CurrentGameInfo,{self.player.id},{self.get_player_info()}")
 

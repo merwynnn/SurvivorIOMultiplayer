@@ -121,7 +121,7 @@ class Game:
         while True:
             active = False
             for player in self.players:
-                if False:
+                if True:
                     active = True
                     break
 
@@ -140,3 +140,15 @@ class Game:
                 p = player
 
         return p
+
+    def get_nearest_zombie(self, position):
+        d = math.inf
+        z = None
+        zombies = list(self.zombies.values())
+        for zombie in zombies:
+            dp = zombie.position.distance_to(position)
+            if dp < d:
+                d = dp
+                z = zombie
+
+        return z

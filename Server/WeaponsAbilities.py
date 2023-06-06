@@ -18,7 +18,7 @@ class WeaponAbility:
     def get_ability_info(self):
         pass
 
-    async def stop_main_task(self):
+    def stop_main_task(self):
         self._stop_main_task = True
 
     def start_main_task(self, func):
@@ -27,7 +27,7 @@ class WeaponAbility:
         _thread.start_new_thread(self.loop, ())
 
     def loop(self):
-        while self._stop_main_task:
+        while not self._stop_main_task:
             self.main_task_func()
 
 
@@ -53,13 +53,17 @@ class KnivesAbility(WeaponAbility):
 
         return f"KnivesAbility%{'%'.join(knives)}"
 
-    async def spawn_knife(self):
-        player = self.player.session.get_nearest_player(self.player.position)
-        pos_delta = self.player.position.move_towards(player.position, 1)
-        dir = pos_delta - self.player.position
-        dir.normalize()
-        knife = Knife(self, self.player.position + dir * 2, dir, 1)
-        self.knives.append(knife)
+    def spawn_knife(self):
+        zombie = self.player.game.get_nearest_zombie(self.player.position)
+        print("loop", zombie)
+        if zombie:
+            pos_delta = self.player.position.move_towards(zombie.position, 1)
+            dir = pos_delta - self.player.position
+            if dir.length() > 0:
+                dir.normalize()
+                knife = Knife(self, self.player.position + dir * 2, dir, 1)
+                self.knives.append(knife)
+                print("Spawn Knife")
         time.sleep(self.shot_delay)
 
     def del_knife(self, knife):
