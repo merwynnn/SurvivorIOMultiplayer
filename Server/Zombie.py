@@ -16,7 +16,7 @@ class Zombie:
 
         self.health = health
 
-        self.size = (960, 960)
+        self.size = (688, 960)
         self.scale = 0.1
 
     def move(self, player):
