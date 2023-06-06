@@ -12,7 +12,7 @@ from pygame.math import Vector2 as Vec2
 
 import _thread
 
-from Client.WeaponsAbilities import KnivesAbility
+from WeaponsAbilities import KnivesAbility
 from Zombie import DefaultZombie
 from player import Player
 

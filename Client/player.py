@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.math import Vector2 as Vec2
 
-from Client.WeaponsAbilities import KnivesAbility
+from WeaponsAbilities import KnivesAbility
 
 
 class Player:

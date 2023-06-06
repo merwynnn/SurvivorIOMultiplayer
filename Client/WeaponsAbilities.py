@@ -1,4 +1,4 @@
-from Client.Weapons import Knife
+from Weapons import Knife
 
 from pygame.math import Vector2 as Vec2
 
