@@ -3,8 +3,8 @@ import math
 import pygame as pg
 
 class Knife:
-    def __init__(self, win, id, pos, dir):
-        self.win = win
+    def __init__(self, player, id, pos, dir):
+        self.player = player
 
         self.id = id
         self.position = pos
@@ -19,4 +19,4 @@ class Knife:
 
     def draw(self, delta):
         rect = self.sprite.get_rect(center=self.position + delta)
-        self.win.blit(self.sprite, rect)
+        self.player.win.blit(self.sprite, rect)

@@ -55,16 +55,14 @@ class KnivesAbility(WeaponAbility):
 
     def spawn_knife(self):
         zombie = self.player.game.get_nearest_zombie(self.player.position)
-        print("loop", zombie)
         if zombie:
             pos_delta = self.player.position.move_towards(zombie.position, 1)
             dir = pos_delta - self.player.position
             if dir.length() > 0:
 
                 dir.normalize()
-                knife = Knife(self, self.player.position + dir * 2, dir, 1)
+                knife = Knife(self, self.player.position + dir * 2, dir, 5)
                 self.knives.append(knife)
-                print("Spawn Knife")
         time.sleep(self.shot_delay)
 
     def del_knife(self, knife):

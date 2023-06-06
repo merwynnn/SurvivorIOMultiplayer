@@ -79,7 +79,6 @@ class Client:
 
                     abilities = infos[4].split("!")
                     for ab in abilities:
-                        print(ab)
                         ability_name, *ability_infos = ab.split("%")
                         ability = None
                         for p_ab in self.player.abilities:
