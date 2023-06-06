@@ -1,7 +1,9 @@
+import _thread
 import asyncio
 import math
 import random
 import string
+import time
 from contextlib import suppress
 
 from pygame.math import Vector2 as Vec2
@@ -22,10 +24,6 @@ class Game:
         self.zombies = {}
         self.zombie_level = 1
         self.spawn_radius = 300
-
-        self.spawn_zombie_task = None
-        self.check_if_active_task = None
-        self.game_loop_task = None
 
     def join(self, new_player):
         if len(self.players) < self.max_players:
@@ -70,24 +68,31 @@ class Game:
     def start(self):
         for player in self.players:
             self.server.send_to_client(player.client_id, "StartInfo")
-        self.spawn_zombie_task = asyncio.ensure_future(self.spawn_zombies())
-        self.check_if_active_task = asyncio.ensure_future(self.check_if_active())
-        self.game_loop_task = asyncio.ensure_future(self.game_loop())
+        print("start")
+        _thread.start_new_thread(self.spawn_zombies, ())
+        _thread.start_new_thread(self.check_if_active, ())
+        _thread.start_new_thread(self.game_loop, ())
+        #self.spawn_zombie_task = asyncio.ensure_future(self.spawn_zombies())
+        #self.check_if_active_task = asyncio.ensure_future(self.check_if_active())
+        #self.game_loop_task = asyncio.ensure_future(self.game_loop())
 
-    async def stop_session(self):
-        self.spawn_zombie_task.cancel()
-        self.check_if_active_task.cancel()
-        self.game_loop_task.cancel()
-        with suppress(asyncio.CancelledError):
-            await self.spawn_zombie_task
-            await self.check_if_active_task
-            await self.game_loop_task
-
+    def stop_session(self):
+        """
+        if self.spawn_zombie_task:
+            self.spawn_zombie_task.cancel()
+            self.check_if_active_task.cancel()
+            self.game_loop_task.cancel()
+            with suppress(asyncio.CancelledError):
+                await self.spawn_zombie_task
+                await self.check_if_active_task
+                await self.game_loop_task
+        """
         for player in self.players:
             for ability in player.abilities:
-                await ability.stop_main_task()
+                ability.stop_main_task()
 
-    async def game_loop(self):
+
+    def game_loop(self):
         while True:
             for player in self.players:
                 for ability in player.abilities:
@@ -97,10 +102,11 @@ class Game:
                 player = self.get_nearest_player(zombie.position)
                 zombie.move(player)
 
-            await asyncio.sleep(0.01)
+            time.sleep(0.01)
 
-    async def spawn_zombies(self):
+    def spawn_zombies(self):
         while True:
+            print("Zombie")
             for player in self.players:
                 nb_zombie = 5
                 spawn_points = [Vec2(math.cos(2 * math.pi / nb_zombie * x) * self.spawn_radius,
@@ -110,9 +116,9 @@ class Game:
                     zombie = DefaultZombie(spawn_point + player.position)
                     self.zombies[zombie.id] = zombie
 
-            await asyncio.sleep(3)
+            time.sleep(3)
 
-    async def check_if_active(self):
+    def check_if_active(self):
         while True:
             active = False
             for player in self.players:
@@ -121,9 +127,9 @@ class Game:
                     break
 
             if not active:
-                await self.stop_session()
+                self.stop_session()
 
-            await asyncio.sleep(5)
+            time.sleep(5)
 
     def get_nearest_player(self, position):
         d = math.inf

@@ -61,7 +61,6 @@ class Client:
             message = self.websocket.recv()
             result = message.split(",")
             if result[0] == "CurrentGameInfo":
-                print(result)
                 player_infos = result[1].split("|")
                 for player_info in player_infos:
                     player_id, infos = player_info.split(":")
