@@ -12,7 +12,7 @@ import os
 
 class Server:
     link = "wss://survivoriomultiplayer.onrender.com"
-
+    #link = "ws://localhost:25565"
     def __init__(self):  
         self.websocket = None
         

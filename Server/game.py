@@ -31,7 +31,7 @@ class Game:
         if len(self.players) < self.max_players:
             for player in self.players:
                 self.server.send_to_client(player.client_id, f"OnNewPlayerJoin,{str(new_player.id)},{str(new_player.username)},{str(len(self.players) + 1)},{str(self.max_players)}")
-                self.server.send_to_client(player.client_id,
+                self.server.send_to_client(new_player.client_id,
                                            f"OnNewPlayerJoin,{str(player.id)},{str(player.username)},{str(len(self.players) + 1)},{str(self.max_players)}")
 
             self.players.append(new_player)

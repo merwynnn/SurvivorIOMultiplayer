@@ -24,7 +24,10 @@ class RemoteServer:
         # Set the stop condition when receiving SIGTERM.
         loop = asyncio.get_running_loop()
         stop = loop.create_future()
-        loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+        try:
+            loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+        except NotImplementedError:
+            pass
         print("Server running on port ", self.port)
         async with websockets.serve(self.handler, "0.0.0.0", self.port, process_request=self.health_check):
             await asyncio.Future()  # run forever

@@ -20,6 +20,7 @@ from player import Player
 class Client:
     #link = "ws://online-pong-websocket.herokuapp.com/0.0.0.0"
     link = "wss://survivoriomultiplayer.onrender.com"
+    #link = "ws://localhost:25565"
 
     def __init__(self):
         self.win = None
@@ -59,11 +60,17 @@ class Client:
             message = self.websocket.recv()
             result = message.split(",")
             if result[0] == "CurrentGameInfo":
+                print(result)
                 player_infos = result[1].split("|")
                 for player_info in player_infos:
                     player_id, infos = player_info.split(":")
                     infos = infos.split("/")
-                    player = self.player if player_id == self.player.id else self.players[player_id]
+                    if player_id == self.player.id:
+                        player = self.player
+                    else:
+                        player = self.players.get(player_id)
+                        if not player:
+                            break
                     if player_id != self.player.id:
                         pos = Vec2((int(infos[0]), int(infos[1])))
                         player.position = pos
@@ -90,17 +97,18 @@ class Client:
 
                 zombie_infos = result[2].split("|")
                 for zombie_info in zombie_infos:
-                    zombie_id, infos = zombie_info.split(":")
-                    infos = infos.split("/")
-                    zombie = self.zombies.get(zombie_id)
-                    if not zombie:
-                        if infos[0] == "DefaultZombie":
-                            zombie = DefaultZombie(self.win, zombie_id, None)
-                            self.zombies[zombie_id] = zombie
+                    if zombie_info != "":
+                        zombie_id, infos = zombie_info.split(":")
+                        infos = infos.split("/")
+                        zombie = self.zombies.get(zombie_id)
+                        if not zombie:
+                            if infos[0] == "DefaultZombie":
+                                zombie = DefaultZombie(self.win, zombie_id, None)
+                                self.zombies[zombie_id] = zombie
 
-                    pos = Vec2((int(infos[1]), int(infos[2])))
-                    zombie.position = pos
-                    zombie.scale = int(infos[3])
+                        pos = Vec2((int(infos[1]), int(infos[2])))
+                        zombie.position = pos
+                        zombie.scale = int(infos[3])
 
             elif result[0] == "GameInfo":
                 self.player.id = result[1]
