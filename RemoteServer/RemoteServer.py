@@ -16,7 +16,7 @@ class RemoteServer:
         try:
             self.port = int(os.environ["PORT"])
         except KeyError:
-            self.port = 25565
+            self.port = 8080
         asyncio.run(self.main())
 
     async def main(self):

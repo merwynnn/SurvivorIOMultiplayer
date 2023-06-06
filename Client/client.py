@@ -18,8 +18,9 @@ from player import Player
 
 
 class Client:
+    link = "wss://survivol-io-multiplayer.fly.dev/"
     #link = "ws://online-pong-websocket.herokuapp.com/0.0.0.0"
-    link = "wss://survivoriomultiplayer.onrender.com"
+    #link = "wss://survivoriomultiplayer.onrender.com"
     #link = "ws://localhost:25565"
 
     def __init__(self):
