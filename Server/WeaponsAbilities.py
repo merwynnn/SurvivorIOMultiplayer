@@ -60,6 +60,7 @@ class KnivesAbility(WeaponAbility):
             pos_delta = self.player.position.move_towards(zombie.position, 1)
             dir = pos_delta - self.player.position
             if dir.length() > 0:
+
                 dir.normalize()
                 knife = Knife(self, self.player.position + dir * 2, dir, 1)
                 self.knives.append(knife)
