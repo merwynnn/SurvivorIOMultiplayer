@@ -12,7 +12,7 @@ from Zombie import DefaultZombie
 
 
 class Game:
-    def __init__(self, server, max_player=max_player):
+    def __init__(self, server, max_player=2):
 
         self.server = server
 
